@@ -4,8 +4,11 @@ pipeline {
 }
 
 
-    stages {
-		stage ('Checkout Java Code'){
+    stage('Check Docker Version') {
+        steps {
+        sh 'docker version'
+        }
+      }
 			steps{
 				git branch: 'master', credentialsId: 'GITHUB-CREDS', url: 'https://github.com/kul-samples/java_sample_webapp.git'
 			}
@@ -19,6 +22,13 @@ pipeline {
             steps {
                 echo 'How are you?'
             }
+        }
+        stage('create docker image') {
+            steps {
+              sh '''docker image ls 
+              docker image build .  -f Dockerfile -t Yogesh.Khule/devops:latest
+              docker image ls'''
+        }
         }
         stage ('SAST'){
           parallel{
